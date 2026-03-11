@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troca de Plantão - UPA Rocinha</title>
+    <style>
+        :root {
+            --primary-blue: #004a8d; 
+            --light-blue: #e8f0fe;
+            --bg-gray: #f4f7f9;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: var(--bg-gray); 
+            margin: 0; padding: 15px; color: #333;
+        }
+
+        .container { 
+            max-width: 750px; background: #ffffff; margin: 10px auto; padding: 30px; 
+            border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-top: 8px solid var(--primary-blue);
+        }
+
+        .logo-container { text-align: center; margin-bottom: 20px; }
+        .logo-container img { width: 160px; height: auto; }
+
+        h2 { color: var(--primary-blue); text-align: center; margin-bottom: 5px; font-size: 1.5em; }
+        p.subtitle { text-align: center; color: #666; margin-bottom: 25px; font-size: 0.9em; }
+        
+        .section-title { 
+            font-weight: bold; margin: 25px 0 10px 0; color: var(--primary-blue); 
+            border-bottom: 2px solid var(--light-blue); font-size: 0.9em; text-transform: uppercase;
+            padding-bottom: 5px;
+        }
+
+        .form-group { margin-bottom: 12px; }
+        label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.85em; }
+        
+        input, select {
+            width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; 
+            box-sizing: border-box; font-size: 14px;
+        }
+
+        /* Garante que o usuário veja em maiúsculas enquanto digita */
+        .uppercase { text-transform: uppercase; }
+
+        .colaborador-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 20px;
+            align-items: center;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            margin-bottom: 15px;
+        }
+
+        .signature-preview {
+            border: 2px solid #ddd;
+            background: #fff;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85em;
+            color: #444;
+            position: relative;
+        }
+
+        .signature-line { 
+            font-weight: bold; 
+            border-bottom: 1px solid #000; 
+            width: 90%; 
+            margin-bottom: 8px;
+            color: #002d55;
+            text-transform: uppercase;
+        }
+
+        .btn-submit { 
+            background-color: var(--primary-blue); color: white; padding: 18px; 
+            border: none; border-radius: 6px; cursor: pointer; font-size: 16px; 
+            font-weight: bold; width: 100%; margin-top: 20px; transition: 0.3s;
+        }
+
+        .btn-submit:hover { background-color: #003366; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+
+        @media (max-width: 650px) {
+            .colaborador-grid, .grid-3 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="logo-container">
+        <img src="logo.png" alt="Logo UPA Rocinha">
+    </div>
+
+    <h2>Troca de Plantão</h2>
+    <p class="subtitle">UPA Rocinha - Registro Oficial</p>
+
+    <form id="formTroca">
+        <div class="section-title">Informações do Plantão</div>
+        <div class="grid-3">
+            <div class="form-group">
+                <label>Data*</label>
+                <input type="date" id="data_plantao" required>
+            </div>
+            <div class="form-group">
+                <label>Setor*</label>
+                <select id="setor" required>
+                    <option value="">Selecione...</option>
+                    <option value="Consultórios">Consultórios</option>
+                    <option value="Emergência / Salas Internas">Emergência / Salas Internas</option>
+                    <option value="Emergência / Enfermagem">Emergência / Enfermagem</option>
+                    <option value="CME">CME</option>
+                    <option value="Recepção">Recepção</option>
+                    <option value="Farmácia">Farmácia</option>
+                    <option value="SESO">SESO</option>
+                    <option value="Administração">Administração</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Horário*</label>
+                <select id="horario" required>
+                    <option value="">Selecione...</option>
+                    <option value="07hs as 19hs">07hs às 19hs</option>
+                    <option value="19hs as 07hs">19hs às 07hs</option>
+                    <option value="24h">24h</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section-title">1. Colaborador que sai (Substituído)</div>
+        <div class="colaborador-grid">
+            <div>
+                <div class="form-group">
+                    <label>Nome Completo*</label>
+                    <input type="text" id="nome_sai" class="uppercase" oninput="atualizarAssinaturas()" required>
+                </div>
+                <div class="form-group">
+                    <label>Cargo*</label>
+                    <input type="text" id="cargo_sai" class="uppercase" oninput="atualizarAssinaturas()" required>
+                </div>
+                <div class="form-group">
+                    <label>Matrícula*</label>
+                    <input type="text" id="mat_sai" oninput="atualizarAssinaturas()" required>
+                </div>
+            </div>
+            <div class="signature-preview">
+                <div class="signature-line" id="preview_nome_sai">...</div>
+                <div id="preview_detalhe_sai" style="font-size: 0.75em;">Cargo / Mat</div>
+            </div>
+        </div>
+
+        <div class="section-title">2. Colaborador que entra (Substituto)</div>
+        <div class="colaborador-grid">
+            <div>
+                <div class="form-group">
+                    <label>Nome Completo*</label>
+                    <input type="text" id="nome_entra" class="uppercase" oninput="atualizarAssinaturas()" required>
+                </div>
+                <div class="form-group">
+                    <label>Cargo*</label>
+                    <input type="text" id="cargo_entra" class="uppercase" oninput="atualizarAssinaturas()" required>
+                </div>
+                <div class="form-group">
+                    <label>Matrícula*</label>
+                    <input type="text" id="mat_entra" oninput="atualizarAssinaturas()" required>
+                </div>
+            </div>
+            <div class="signature-preview">
+                <div class="signature-line" id="preview_nome_entra">...</div>
+                <div id="preview_detalhe_entra" style="font-size: 0.75em;">Cargo / Mat</div>
+            </div>
+        </div>
+
+        <button type="submit" id="btnSubmit" class="btn-submit">Registrar Troca de Plantão</button>
+    </form>
+</div>
+
+<script>
+    function atualizarAssinaturas() {
+        document.getElementById('preview_nome_sai').innerText = document.getElementById('nome_sai').value.toUpperCase() || "...";
+        document.getElementById('preview_detalhe_sai').innerText = (document.getElementById('cargo_sai').value.toUpperCase() || "Cargo") + " / Mat: " + (document.getElementById('mat_sai').value || "0000");
+        
+        document.getElementById('preview_nome_entra').innerText = document.getElementById('nome_entra').value.toUpperCase() || "...";
+        document.getElementById('preview_detalhe_entra').innerText = (document.getElementById('cargo_entra').value.toUpperCase() || "Cargo") + " / Mat: " + (document.getElementById('mat_entra').value || "0000");
+    }
+
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzMx2YTFR4uceE1umlOc3soRHqhDXvgGVMAA8zYA1BusUfdlJnL7DK0xOooIPHXRTe1/exec";
+
+    document.getElementById('formTroca').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btnSubmit');
+        btn.disabled = true;
+        btn.innerText = "Enviando...";
+
+        const payload = {
+            data: document.getElementById('data_plantao').value,
+            setor: document.getElementById('setor').value,
+            horario: document.getElementById('horario').value,
+            nome_sai: document.getElementById('nome_sai').value.toUpperCase().trim(),
+            mat_sai: document.getElementById('mat_sai').value.trim(),
+            cargo_sai: document.getElementById('cargo_sai').value.toUpperCase().trim(),
+            nome_entra: document.getElementById('nome_entra').value.toUpperCase().trim(),
+            mat_entra: document.getElementById('mat_entra').value.trim(),
+            cargo_entra: document.getElementById('cargo_entra').value.toUpperCase().trim(),
+            assinatura_resumo: "SAI: " + document.getElementById('nome_sai').value.toUpperCase() + " / ENTRA: " + document.getElementById('nome_entra').value.toUpperCase(),
+            timestamp: new Date().toLocaleString("pt-BR")
+        };
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors', 
+            body: JSON.stringify(payload)
+        })
+        .then(() => {
+            alert('Sucesso! Registro concluído.');
+            document.getElementById('formTroca').reset();
+            atualizarAssinaturas();
+        })
+        .catch(() => alert('Erro na conexão.'))
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerText = "Registrar Troca de Plantão";
+        });
+    });
+</script>
+</body>
+</html>
